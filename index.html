@@ -1,71 +1,161 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Dujaw Manandhar Portfolio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dujaw Manandhar Portfolio</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #38bdf8;
+            --text: #f8fafc;
+        }
 
-<style>
-body{
-font-family: Arial;
-background:#0f172a;
-color:white;
-text-align:center;
-padding:40px;
-}
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
 
-h1{
-font-size:40px;
-}
+        h1 { font-size: 32px; margin-bottom: 5px; }
+        h3 { color: var(--accent); margin-top: 0; font-weight: 400; }
 
-.project{
-background:#1e293b;
-margin:20px;
-padding:20px;
-border-radius:10px;
-}
+        .tech-stack {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
 
-a{
-color:#38bdf8;
-text-decoration:none;
-font-size:18px;
-}
+        /* Project Card Styling */
+        .project {
+            background: var(--card);
+            width: 100%;
+            max-width: 400px;
+            margin: 10px 0;
+            padding: 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+            text-align: left;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
 
-button{
-padding:10px 20px;
-border:none;
-border-radius:6px;
-background:#38bdf8;
-cursor:pointer;
-}
-</style>
+        .project:active {
+            transform: scale(0.97);
+            background: #2d3d5a;
+        }
 
+        /* Bottom Sheet Menu */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 10;
+        }
+
+        .bottom-sheet {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            background: var(--card);
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: bottom 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 11;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+        }
+
+        .bottom-sheet.active {
+            bottom: 0;
+        }
+
+        .sheet-handle {
+            width: 40px; height: 5px;
+            background: #475569;
+            border-radius: 10px;
+            margin: 0 auto 20px;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 15px;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.05);
+            transition: background 0.2s;
+        }
+
+        .menu-item:hover { background: var(--accent); color: var(--bg); }
+
+        .close-btn {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 10px;
+            background: none; border: none; cursor: pointer;
+        }
+    </style>
 </head>
-
 <body>
 
-<h1>Dujaw Manandhar</h1>
-<h3>Flutter Full Stack Developer</h3>
+    <h1>Dujaw Manandhar</h1>
+    <h3>Flutter Full Stack Developer</h3>
+    <div class="tech-stack">Flutter • Firebase • AI • IoT • REST APIs</div>
 
-<p>
-Flutter • Firebase • AI • IoT • REST APIs
-</p>
+    <div class="project" onclick="openMenu('HomeGuardian', 'https://github.com/dujawmanandharZ/homeguardian-smart-home', '#')">
+        <h2 style="margin:0">HomeGuardian</h2>
+        <p style="opacity:0.7; font-size:14px;">Smart home automation system using Flutter and Raspberry Pi.</p>
+    </div>
 
-<div class="project">
-<h2>HomeGuardian</h2>
-<p>Smart home automation system using Flutter and Raspberry Pi.</p>
-<a href="https://github.com/dujawmanandharZ/homeguardian-smart-home">View Project</a>
-</div>
+    <div class="project" onclick="openMenu('Calcify', '#', '#')">
+        <h2 style="margin:0">Calcify</h2>
+        <p style="opacity:0.7; font-size:14px;">AI powered math solver using OCR and Gemini AI.</p>
+    </div>
 
-<div class="project">
-<h2>Calcify</h2>
-<p>AI powered math solver using OCR and Gemini AI.</p>
-<a href="#">Project Code</a>
-</div>
+    <div class="project" onclick="openMenu('ScanPay POS', '#', '#')">
+        <h2 style="margin:0">ScanPay POS</h2>
+        <p style="opacity:0.7; font-size:14px;">Barcode based POS billing system with QR payments.</p>
+    </div>
 
-<div class="project">
-<h2>ScanPay POS</h2>
-<p>Barcode based POS billing system with QR payments.</p>
-<a href="#">Project Code</a>
-</div>
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+    <div class="bottom-sheet" id="bottomSheet">
+        <div class="sheet-handle"></div>
+        <h2 id="sheetTitle" style="margin-top:0">Project</h2>
+        <a id="githubLink" href="#" class="menu-item" target="_blank">View on GitHub</a>
+        <a id="apkLink" href="#" class="menu-item">Download APK</a>
+        <button class="close-btn" onclick="closeMenu()">Cancel</button>
+    </div>
+
+    <script>
+        function openMenu(title, githubUrl, apkUrl) {
+            document.getElementById('sheetTitle').innerText = title;
+            document.getElementById('githubLink').href = githubUrl;
+            document.getElementById('apkLink').href = apkUrl;
+            
+            document.getElementById('overlay').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('bottomSheet').classList.add('active');
+            }, 10);
+        }
+
+        function closeMenu() {
+            document.getElementById('bottomSheet').classList.remove('active');
+            setTimeout(() => {
+                document.getElementById('overlay').style.display = 'none';
+            }, 300);
+        }
+    </script>
 
 </body>
 </html>
